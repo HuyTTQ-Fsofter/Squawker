@@ -34,6 +34,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -88,7 +89,10 @@ public class MainActivity extends AppCompatActivity implements
 
         // TODO (1) Get the test data here from the extras bundle that came with this intent.
         // To confirm that the data was passed in, make sure to show the data in a log statement.
-
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null && bundle.containsKey("test")) {
+            Toast.makeText(this, "value key test = " + bundle.getString("test"), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
