@@ -105,6 +105,9 @@ public class SquawkAdapter extends RecyclerView.Adapter<SquawkAdapter.SquawkView
             case SquawkContract.NIKITA_KEY:
                 holder.authorImageView.setImageResource(R.drawable.nikita);
                 break;
+            case SquawkContract.HUYTTQ_KEY:
+                holder.authorImageView.setImageResource(R.drawable.huyttq);
+                break;
             default:
                 holder.authorImageView.setImageResource(R.drawable.test);
         }
