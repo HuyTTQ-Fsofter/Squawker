@@ -18,8 +18,12 @@ package android.example.com.squawker.following;
 import android.content.SharedPreferences;
 import android.example.com.squawker.R;
 import android.os.Bundle;
+import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.SwitchPreferenceCompat;
 import android.util.Log;
+
+import com.google.firebase.messaging.FirebaseMessaging;
 
 
 /**
@@ -48,6 +52,24 @@ public class FollowingPreferenceFragment extends PreferenceFragmentCompat implem
 
         // HINT: Checkout res->xml->following_squawker.xml. Note how the keys for each of the
         // preferences matches the topic to subscribe to for each instructor.
+        Preference preference = findPreference(s);
+        if (preference != null && preference instanceof SwitchPreferenceCompat) {
+            //Get current state of the switch preference
+            boolean isOn = sharedPreferences.getBoolean(s, false);
+            if (isOn) {
+                //The preference key matches the following key for the associated instructor in
+                //FCM. For example, the key for Lyla is key_lyla (as seen in following_squawker.xml).
+                //The topic for Lyla's messages is /topics/ley_lyla
+
+                // Subscribe
+                FirebaseMessaging.getInstance().subscribeToTopic(s);
+                Log.d(TAG, "Subscribing to " + s);
+            } else {
+                //Un-subcribing
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(s);
+                Log.d(TAG, "Un-Subscribing to " + s);
+            }
+        }
     }
 
 
@@ -57,10 +79,14 @@ public class FollowingPreferenceFragment extends PreferenceFragmentCompat implem
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Add shared preference change listener
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        //Remove the shared preference change listener
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 }
